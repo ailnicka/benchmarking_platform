@@ -125,7 +125,7 @@ if __name__=='__main__':
             # load scored lists
             scores = {}
             for inp in inpath: # loop over input paths
-                myfile = gzip.open(inp+'/list_'+dataset+'_'+str(target)+'_.pkl.gz', 'r')
+                myfile = gzip.open(inp+'/list_'+dataset+'_'+str(target)+'.pkl.gz', 'r')
                 while 1:
                     try:
                         tmp = cPickle.load(myfile)

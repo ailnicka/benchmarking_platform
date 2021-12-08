@@ -49,7 +49,8 @@
 #
 
 from rdkit import Chem, DataStructs
-import cPickle, gzip, sys, os, os.path
+import _pickle as cPickle
+import gzip, sys, os, os.path
 from collections import defaultdict
 from optparse import OptionParser 
 
@@ -112,14 +113,14 @@ if __name__=='__main__':
 
     # loop over data-set sources
     for dataset in conf.set_data.keys():
-        print dataset
+        print(dataset)
         # loop over targets
         for target in conf.set_data[dataset]['ids']:
-            print target
+            print(target)
 
             # read in actives and calculate fps
             actives = []
-            for line in gzip.open(inpath_cmp+dataset+'/cmp_list_'+dataset+'_'+str(target)+'_actives.dat.gz', 'r'):
+            for line in gzip.open(inpath_cmp+dataset+'/cmp_list_'+dataset+'_'+str(target)+'_actives.dat.gz', 'rt'):
                 if line[0] != '#': 
                     # structure of line: [external ID, internal ID, SMILES]]
                     line = line.rstrip().split()
@@ -133,7 +134,7 @@ if __name__=='__main__':
             if dataset == 'ChEMBL':
                 if firstchembl:
                     decoys = []
-                    for line in gzip.open(inpath_cmp+dataset+'/cmp_list_'+dataset+'_zinc_decoys.dat.gz', 'r'):
+                    for line in gzip.open(inpath_cmp+dataset+'/cmp_list_'+dataset+'_zinc_decoys.dat.gz', 'rt'):
                         if line[0] != '#': 
                             # structure of line: [external ID, internal ID, SMILES]]
                             line = line.rstrip().split()
@@ -143,7 +144,7 @@ if __name__=='__main__':
                     firstchembl = False
             else:
                 decoys = []
-                for line in gzip.open(inpath_cmp+dataset+'/cmp_list_'+dataset+'_'+str(target)+'_decoys.dat.gz', 'r'):
+                for line in gzip.open(inpath_cmp+dataset+'/cmp_list_'+dataset+'_'+str(target)+'_decoys.dat.gz', 'rt'):
                     if line[0] != '#': 
                         # structure of line: [external ID, internal ID, SMILES]]
                         line = line.rstrip().split()
@@ -151,10 +152,10 @@ if __name__=='__main__':
                         # store: [internal ID, dict with fps]
                         decoys.append([line[1], fp_dict])
             num_decoys = len(decoys)
-            print "molecules read in and fingerprints calculated"
+            print("molecules read in and fingerprints calculated")
 
             # open training lists
-            training_input = open(inpath_list+dataset+'/training_'+dataset+'_'+str(target)+'_'+str(num_query_mols)+'.pkl', 'r')
+            training_input = open(inpath_list+dataset+'/training_'+dataset+'_'+str(target)+'_'+str(num_query_mols)+'.pkl', 'rb')
             # to store the scored lists
             scores = defaultdict(list)
 
@@ -186,4 +187,4 @@ if __name__=='__main__':
             for fp in fp_names:
                 cPickle.dump([fp, scores[fp]], outfile, 2)
             outfile.close()
-            print "scoring done and scored lists written"
+            print("scoring done and scored lists written")

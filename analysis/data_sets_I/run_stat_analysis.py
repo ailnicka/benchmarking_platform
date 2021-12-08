@@ -60,7 +60,7 @@ import analysis_functions as ana_func
 # paths
 cwd = os.getcwd()
 path = cwd + '/'
-Rpath = '/usr/prog/R/2.15.2_gcc/bin/Rscript'
+Rpath = '/usr/local/bin/Rscript'
 
 # prepare command-line option parser
 usage = "usage: %prog [options] arg"

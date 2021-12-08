@@ -36,6 +36,7 @@
 
 import os, sys, operator
 from rdkit import DataStructs
+import numpy as np
 
 # import the fingerprint library
 import fingerprint_lib
@@ -61,7 +62,7 @@ def checkPath(filepath, name):
 
 def checkSimil(simil):
     '''Checks if the chosen similarity metric is supported'''
-    simil_list = ['Dice', 'Tanimoto', 'Cosine', 'Russel', 'Kulczynski', 'McConnaughey', 'Manhattan', 'RogotGoldberg']
+    simil_list = ['Dice', 'Tanimoto', 'Cosine', 'Russel', 'Kulczynski', 'McConnaughey', 'Manhattan', 'RogotGoldberg', 'Euclidean']
     if simil not in simil_list:
         raise ValueError('provided similarity metric not supported:', simil)
 
@@ -82,6 +83,9 @@ def getFP(fp_name, smiles):
     '''Gets fingerprint from fingerprint library'''
     return fingerprint_lib.CalculateFP(fp_name, smiles)
 
+def euclidean_dist(x, y):
+    return [np.linalg.norm(x - yi) for yi in y]
+
 # dictionary for similarity measures
 simil_dict = {}
 simil_dict['Dice'] = lambda x,y: sorted(DataStructs.BulkDiceSimilarity(x,y), reverse=True)
@@ -92,6 +96,7 @@ simil_dict['Kulczynski'] = lambda x,y: sorted(DataStructs.BulkKulczynskiSimilari
 simil_dict['McConnaughey'] = lambda x,y: sorted(DataStructs.BulkMcConnaugheySimilarity(x,y), reverse=True)
 simil_dict['Manhattan'] = lambda x,y: sorted(DataStructs.BulkAllBitSimilarity(x,y), reverse=True)
 simil_dict['RogotGoldberg'] = lambda x,y: sorted(DataStructs.BulkRogotGoldbergSimilarity(x,y), reverse=True)
+simil_dict['Euclidean'] = lambda x,y: sorted(euclidean_dist(x,y), reverse=True)
 
 def getBulkSimilarity(fp, fp_list, simil):
     '''Calculate the bulk similarity for a given list of fingerprints'''
@@ -100,13 +105,13 @@ def getBulkSimilarity(fp, fp_list, simil):
 # helper functions for the fusion
 def printFPs(fps, fpname):
     '''Prints a list of fingerprints'''
-    print "-------------------------------"
-    print "FUSION DONE FOR:"
+    print("-------------------------------")
+    print("FUSION DONE FOR:")
     for fp in fps:
-        print fp,
-    print ""
-    print "Name of fusion:", fpname
-    print "-------------------------------"
+        print(fp),
+    print("")
+    print("Name of fusion:", fpname)
+    print("-------------------------------")
 
 def getName(fp, fp_names):
     '''Determines the new name of a fingerprint in case

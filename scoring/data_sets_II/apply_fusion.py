@@ -50,7 +50,8 @@
 # OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #
 
-import gzip, cPickle, math, sys, os, os.path
+import gzip, math, sys, os, os.path
+import _pickle as cPickle
 from collections import defaultdict
 from optparse import OptionParser
 
@@ -117,7 +118,7 @@ if __name__=='__main__':
         # load scored lists
         scores = {}
         for inp in inpath: # loop over input paths
-            myfile = gzip.open(inp+'/list_'+str(target)+'.pkl.gz', 'r')
+            myfile = gzip.open(inp+'/list_'+str(target)+'.pkl.gz', 'rb')
             while 1:
                 try:
                     tmp = cPickle.load(myfile)

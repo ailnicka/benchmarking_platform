@@ -101,7 +101,7 @@ if __name__=='__main__':
         inpath = tmppath+'/'+dataset
 
         # loop over targets
-        for target in conf.set_data:
+        for target in conf.set_data[dataset]['ids']:
             print target
 
             # load results

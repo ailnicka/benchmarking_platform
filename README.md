@@ -55,3 +55,7 @@ machine-learning library scikit-learn (www.scikit-learn.org).
 
 Running a script with the option [--help] gives a description of the 
 required and optional input parameters of the script.
+
+
+MY ADDITIONS:
+To be able to use ML fps the scoring part was modified to be run in python3 (env_py3). The rest communicates just via files, so can be run in py2 (env_py2)

@@ -50,7 +50,8 @@
 # OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #
 
-import gzip, cPickle, math, sys, os, os.path
+import gzip, math, sys, os, os.path
+import _pickle as cPickle
 from collections import defaultdict
 from optparse import OptionParser
 
@@ -112,16 +113,16 @@ if __name__=='__main__':
 
     # loop over data-set sources
     for dataset in conf.set_data.keys():
-        print dataset
+        print(dataset)
 
         # loop over targets
         for target in conf.set_data[dataset]['ids']:
-            print target
+            print(target)
 
             # load scored lists
             scores = {}
             for inp in inpath: # loop over input paths
-                myfile = gzip.open(inp+'/list_'+dataset+'_'+str(target)+'_.pkl.gz', 'r')
+                myfile = gzip.open(inp+'/list_'+dataset+'_'+str(target)+'_.pkl.gz', 'rb')
                 while 1:
                     try:
                         tmp = cPickle.load(myfile)
@@ -133,9 +134,9 @@ if __name__=='__main__':
                             tmp[0] = scor.getName(tmp[0], scores.keys())
                             # input line: [fp_name, list of scored lists]
                             scores[tmp[0]] = tmp[1]
-            print "scored lists read in"
+            print("scored lists read in")
             if len(scores.keys()) < 2:
-                print "number of fingerprints/models < 2, nothing to be done"
+                print("number of fingerprints/models < 2, nothing to be done")
                 break
             if printfp:
                 # determine the name of the fusion

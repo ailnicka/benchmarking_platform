@@ -3,6 +3,8 @@
 #
 # module to calculate a fingerprint from SMILES
 
+from os import fdopen
+from numpy.lib.index_tricks import fill_diagonal
 from rdkit import Chem
 from rdkit.Chem import MACCSkeys, AllChem
 from rdkit.Avalon import pyAvalonTools as fpAvalon
@@ -10,6 +12,8 @@ from rdkit.Chem.AtomPairs import Pairs, Torsions
 from rdkit.Chem.Fingerprints import FingerprintMols
 from rdkit.Chem.ChemicalFeatures import BuildFeatureFactory
 from rdkit.Chem import rdMolDescriptors
+from tensorflow.keras.models import load_model
+import numpy as np
 
 # implemented fingerprints:
 # ECFC0 (ecfc0), ECFP0 (ecfp0), MACCS (maccs), 
@@ -23,8 +27,34 @@ from rdkit.Chem import rdMolDescriptors
 # RDKit with path length = 5 (rdk5), with path length = 6 (rdk6), with path length = 7 (rdk7)
 # 2D pharmacophore (pharm) ?????????????
 
-nbits = 1024
+nbits = 2048
 longbits = 16384
+
+
+class AEFingerprints:
+    def __init__(self):
+        self.MACCS_50_np_compressor = load_model("/Users/ailnicka/PycharmProjects/AE/Models/MACCS_50_no_prop")
+        self.Morgan_4_np_compressor = load_model("/Users/ailnicka/PycharmProjects/AE/Models/Morgan_4_100_no_prop")
+        self.MACCS_50_compressor = load_model("/Users/ailnicka/PycharmProjects/AE/Models/MACCS_50")
+        self.Morgan_4_compressor = load_model("/Users/ailnicka/PycharmProjects/AE/Models/Morgan_4_100")
+
+    def compressed_MACCS_50(self, m):
+        m = MACCSkeys.GenMACCSKeys(m)
+        return self.MACCS_50_compressor.encoder(np.array([m])).numpy().flatten()
+
+    def compressed_Morgan4_100(self, m):
+        m = AllChem.GetMorganFingerprintAsBitVect(m, 4, nBits=nbits)
+        return self.Morgan_4_compressor.encoder(np.array([m])).numpy().flatten()
+    
+    def compressed_MACCS_50_np(self, m):
+        m = MACCSkeys.GenMACCSKeys(m)
+        return self.MACCS_50_compressor.encoder(np.array([m])).numpy().flatten()
+
+    def compressed_Morgan4_100_np(self, m):
+        m = AllChem.GetMorganFingerprintAsBitVect(m, 4, nBits=nbits)
+        return self.Morgan_4_compressor.encoder(np.array([m])).numpy().flatten()
+
+aef = AEFingerprints()
 
 # dictionary
 fpdict = {}
@@ -56,7 +86,11 @@ fpdict['laval'] = lambda m: fpAvalon.GetAvalonFP(m, longbits)
 fpdict['rdk5'] = lambda m: Chem.RDKFingerprint(m, maxPath=5, fpSize=nbits, nBitsPerHash=2)
 fpdict['rdk6'] = lambda m: Chem.RDKFingerprint(m, maxPath=6, fpSize=nbits, nBitsPerHash=2)
 fpdict['rdk7'] = lambda m: Chem.RDKFingerprint(m, maxPath=7, fpSize=nbits, nBitsPerHash=2)
-
+fpdict['comp_MACCS'] = lambda m: aef.compressed_MACCS_50(m)
+fpdict['comp_Morgan4'] = lambda m: aef.compressed_Morgan4_100(m)
+fpdict['comp_MACCS_np'] = lambda m: aef.compressed_MACCS_50_np(m)
+fpdict['comp_Morgan4_np'] = lambda m: aef.compressed_Morgan4_100_np(m)
+fpdict['Morgan4'] = lambda m: AllChem.GetMorganFingerprintAsBitVect(m, 3)
 
 def CalculateFP(fp_name, smiles):
     m = Chem.MolFromSmiles(smiles)

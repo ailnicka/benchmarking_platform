@@ -1,0 +1,44 @@
+name: env-vs-py2
+channels:
+  - rdkit
+  - defaults
+  - conda-forge
+dependencies:
+  - boost=1.56.0=py27_3
+  - bzip2=1.0.8=h1de35cc_0
+  - ca-certificates=2021.10.26=hecd8cb5_2
+  - cairo=1.16.0=h8023c5d_1
+  - certifi=2020.6.20=pyhd3eb1b0_3
+  - fontconfig=2.13.1=ha9ee91d_0
+  - freetype=2.11.0=hd8bbffd_0
+  - gettext=0.21.0=h7535e17_0
+  - glib=2.69.1=hdf23fa2_0
+  - icu=58.2=h0a44026_3
+  - intel-openmp=2021.4.0=hecd8cb5_3538
+  - libblas=3.9.0=12_osx64_mkl
+  - libcblas=3.9.0=12_osx64_mkl
+  - libcxx=12.0.0=h2f01273_0
+  - libffi=3.3=hb1e8313_2
+  - libgfortran=3.0.1=h93005f0_2
+  - libiconv=1.16=h1de35cc_0
+  - liblapack=3.9.0=12_osx64_mkl
+  - libpng=1.6.37=ha441bb4_0
+  - libxml2=2.9.12=hcdb78fc_0
+  - llvm-openmp=12.0.0=h0dcd299_1
+  - mkl=2021.4.0=hecd8cb5_637
+  - ncurses=6.3=hca72f7f_2
+  - numpy=1.11.3=py27hdf140aa_1207
+  - pcre=8.45=h23ab428_0
+  - pip=19.3.1=py27_0
+  - pixman=0.40.0=h9ed2024_1
+  - python=2.7.18=h47d645e_1
+  - rdkit=2017.03.1=np111py27_1
+  - readline=8.1=h9ed2024_0
+  - scipy=1.2.1=py27hbd7caa9_1
+  - setuptools=44.0.0=py27_0
+  - sqlite=3.36.0=hce871da_0
+  - tk=8.6.11=h7bc2e8c_0
+  - wheel=0.37.0=pyhd3eb1b0_1
+  - xz=5.2.5=h1de35cc_0
+  - zlib=1.2.11=h1de35cc_3
+prefix: /usr/local/anaconda3/envs/env-vs-py2

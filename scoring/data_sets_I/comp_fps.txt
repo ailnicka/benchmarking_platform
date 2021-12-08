@@ -1,0 +1,4 @@
+comp_MACCS
+comp_Morgan4
+comp_MACCS_np
+comp_Morgan4_np

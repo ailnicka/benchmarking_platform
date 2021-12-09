@@ -6,5 +6,4 @@ dependencies:
   - python=2
   - rdkit
   - scipy
-  - libgfortran==3.0.1
 prefix: /usr/local/anaconda3/envs/env-vs-py2

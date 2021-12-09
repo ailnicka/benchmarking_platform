@@ -62,7 +62,7 @@ def checkPath(filepath, name):
 
 def checkSimil(simil):
     '''Checks if the chosen similarity metric is supported'''
-    simil_list = ['Dice', 'Tanimoto', 'Cosine', 'Russel', 'Kulczynski', 'McConnaughey', 'Manhattan', 'RogotGoldberg', 'Euclidean']
+    simil_list = ['Dice', 'Tanimoto', 'Cosine', 'Cosine_bit', 'Russel', 'Kulczynski', 'McConnaughey', 'Manhattan', 'RogotGoldberg', 'Euclidean']
     if simil not in simil_list:
         raise ValueError('provided similarity metric not supported:', simil)
 
@@ -86,11 +86,16 @@ def getFP(fp_name, smiles):
 def euclidean_dist(x, y):
     return [np.linalg.norm(x - yi) for yi in y]
 
+def cos_dist(x, y):
+    x2 = np.linalg.norm(x)
+    return [np.dot(x, yi)/(x2*np.linalg.norm(yi)) for yi in y]
+
 # dictionary for similarity measures
 simil_dict = {}
 simil_dict['Dice'] = lambda x,y: sorted(DataStructs.BulkDiceSimilarity(x,y), reverse=True)
 simil_dict['Tanimoto'] = lambda x,y: sorted(DataStructs.BulkTanimotoSimilarity(x, y), reverse=True)
-simil_dict['Cosine'] = lambda x,y: sorted(DataStructs.BulkCosineSimilarity(x,y), reverse=True)
+simil_dict['Cosine_bit'] = lambda x,y: sorted(DataStructs.BulkCosineSimilarity(x, y), reverse=True)
+simil_dict['Cosine'] = lambda x,y: sorted(cos_dist(x, y), reverse=True)
 simil_dict['Russel'] = lambda x,y: sorted(DataStructs.BulkRusselSimilarity(x,y), reverse=True)
 simil_dict['Kulczynski'] = lambda x,y: sorted(DataStructs.BulkKulczynskiSimilarity(x,y), reverse=True)
 simil_dict['McConnaughey'] = lambda x,y: sorted(DataStructs.BulkMcConnaugheySimilarity(x,y), reverse=True)

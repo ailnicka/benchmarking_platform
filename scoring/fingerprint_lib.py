@@ -33,7 +33,8 @@ longbits = 16384
 
 class AEFingerprints:
     def __init__(self):
-        core = "/Users/ailnicka/PycharmProjects/"
+        #core = "/Users/ailnicka/PycharmProjects/"
+        core = "/cluster/work/schneider/modlab/ailnicka/"
         self.MACCS_50_np_compressor = load_model(core+"AE/Models/MACCS_50_no_prop_01")
         self.Morgan_2_np_compressor = load_model(core+"AE/Models/Morgan_2_100_no_prop_01")
         self.MACCS_50_compressor = load_model(core+"AE/Models/MACCS_50_01")
@@ -60,7 +61,7 @@ class AEFingerprints:
     def compressed_MACCS_Morgan2_100(self, m):
         m1 = MACCSkeys.GenMACCSKeys(m)
         m2 = AllChem.GetMorganFingerprintAsBitVect(m, 2, nBits=nbits)
-        return self.MACCS_Morgan_compressor.encoder(np.array([m1,m2])).numpy().flatten()
+        return self.MACCS_Morgan_compressor.encoder([np.array([m1]), np.array([m2])]).numpy().flatten()
 
     def compressed_MACCS_Morgan2_100_np(self, m):
         m1 = MACCSkeys.GenMACCSKeys(m)

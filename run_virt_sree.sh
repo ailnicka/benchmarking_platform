@@ -1,5 +1,5 @@
 conda activate env-AE
-cd benchmarking_platform/scoring/data_sets_I
+cd scoring/data_sets_I
 mkdir tani_eucl
 python calculate_scored_lists.py -n 5 -f fps.txt -s Tanimoto -o tani_eucl
 python calculate_scored_lists.py -n 5 -f comp_fps.txt -s Euclidean -a -o tani_eucl

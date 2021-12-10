@@ -66,7 +66,7 @@ class AEFingerprints:
     def compressed_MACCS_Morgan2_100_np(self, m):
         m1 = MACCSkeys.GenMACCSKeys(m)
         m2 = AllChem.GetMorganFingerprintAsBitVect(m, 2, nBits=nbits)
-        return self.MACCS_Morgan_np_compressor.encoder(np.array([m1,m2])).numpy().flatten()
+        return self.MACCS_Morgan_np_compressor.encoder([np.array([m1]), np.array([m2])]).numpy().flatten()
 
 aef = AEFingerprints()
 

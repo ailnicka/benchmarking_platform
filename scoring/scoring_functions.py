@@ -88,7 +88,7 @@ def euclidean_dist(x, y):
 
 def cos_dist(x, y):
     x2 = np.linalg.norm(x)
-    return [1 - np.dot(x, yi)/(x2*np.linalg.norm(yi)) for yi in y]
+    return [np.dot(x, yi)/(x2*np.linalg.norm(yi)) for yi in y]
 
 # dictionary for similarity measures
 simil_dict = {}

@@ -84,7 +84,7 @@ def getFP(fp_name, smiles):
     return fingerprint_lib.CalculateFP(fp_name, smiles)
 
 def euclidean_dist(x, y):
-    return [np.linalg.norm(x - yi) for yi in y]
+    return [1/(1+np.linalg.norm(x - yi)) for yi in y]
 
 def cos_dist(x, y):
     x2 = np.linalg.norm(x)

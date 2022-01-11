@@ -30,6 +30,36 @@ import numpy as np
 nbits = 2048
 longbits = 16384
 
+def compress_via_int(fp, int_len = 8, to_float=False):
+    if int_len not in (8, 16, 32):
+        raise ValueError('Int_len argument shall be 8, 16 or 32')
+    
+    len_comp_fp = int(np.ceil(len(fp)/int_len))    
+    def bits_to_ints(fp):
+        # Makes signed int
+        max_int = 2**(int_len-1)
+        bitstr = ''.join((str(i) for i in fp))
+        return np.array([max_int - int(bitstr[i*int_len : (i+1)*int_len], 2) for i in range(len_comp_fp)])
+    
+    compressed_fp = bits_to_ints(fp)
+    if to_float:
+        "Note: sigmoid is pretty bad though, cause it works best on -5,5, but further these would be mostly 0s and 1s"
+        compressed_fp = 1.0/(1.0 + np.exp(-compressed_fp))
+    return compressed_fp
+
+def compress_via_logic(fp, window, op='or'):
+    OP_DICT = {'and': all, 'or': any, 'sum': sum}
+
+    if op not in OP_DICT.keys():
+        raise ValueError('Op value shall be "and", "or" or "sum"')
+    
+    len_comp_fp = int(np.ceil(len(fp)/window))
+    def operation_on_bits(fp):
+        return [OP_DICT[op](fp[i*window: (i+1)*window]) for i in range(len_comp_fp)]
+    compressed_fp = np.array(operation_on_bits(fp))
+
+    return compressed_fp
+
 
 class AEFingerprints:
     def __init__(self):
@@ -107,6 +137,15 @@ fpdict['comp_Morgan2_np'] = lambda m: aef.compressed_Morgan2_100_np(m)
 fpdict['comp_MACCS_Morgan2'] = lambda m: aef.compressed_MACCS_Morgan2_100(m)
 fpdict['comp_MACCS_Morgan2_np'] = lambda m: aef.compressed_MACCS_Morgan2_100_np(m)
 fpdict['Morgan2'] = lambda m: AllChem.GetMorganFingerprintAsBitVect(m, 2)
+fpdict['bench_comp_int_MACCS'] = lambda m: compress_via_int(list(MACCSkeys.GenMACCSKeys(m)))
+fpdict['bench_comp_and_MACCS'] = lambda m: compress_via_logic(list(MACCSkeys.GenMACCSKeys(m)), 10, 'and')
+fpdict['bench_comp_or_MACCS'] = lambda m: compress_via_logic(list(MACCSkeys.GenMACCSKeys(m)), 10, 'or')
+fpdict['bench_comp_sum_MACCS'] = lambda m: compress_via_logic(list(MACCSkeys.GenMACCSKeys(m)), 10, 'sum')
+fpdict['bench_comp_int_Morgan2'] = lambda m: compress_via_int(list(AllChem.GetMorganFingerprintAsBitVect(m, 2)))
+fpdict['bench_comp_and_Morgan2'] = lambda m: compress_via_logic(list(AllChem.GetMorganFingerprintAsBitVect(m, 2)), 10, 'and')
+fpdict['bench_comp_or_Morgan2'] = lambda m: compress_via_logic(list(AllChem.GetMorganFingerprintAsBitVect(m, 2)), 10, 'or')
+fpdict['bench_comp_sum_Morgan2'] = lambda m: compress_via_logic(list(AllChem.GetMorganFingerprintAsBitVect(m, 2)), 10, 'sum')
+
 
 def CalculateFP(fp_name, smiles):
     m = Chem.MolFromSmiles(smiles)

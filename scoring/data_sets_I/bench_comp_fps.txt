@@ -1,0 +1,5 @@
+bench_comp_int_MACCS
+bench_comp_sum_MACCS
+bench_comp_int_Morgan2
+bench_comp_sum_Morgan2
+comp_MACCS_Morgan2_np

@@ -1,0 +1,6 @@
+maccs
+Morgan2
+bench_comp_and_MACCS
+bench_comp_or_MACCS
+bench_comp_and_Morgan2
+bench_comp_or_Morgan2

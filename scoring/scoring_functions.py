@@ -90,10 +90,16 @@ def cos_dist(x, y):
     x2 = np.linalg.norm(x)
     return [np.dot(x, yi)/(x2*np.linalg.norm(yi)) for yi in y]
 
+def tanimoto_dist(x,y):
+    x = np.array(x)
+    return [np.sum(np.logical_and(x, np.array(yi)))/ np.sum(np.logical_or(x, np.array(yi))) for yi in y]
+
+
 # dictionary for similarity measures
 simil_dict = {}
 simil_dict['Dice'] = lambda x,y: sorted(DataStructs.BulkDiceSimilarity(x,y), reverse=True)
-simil_dict['Tanimoto'] = lambda x,y: sorted(DataStructs.BulkTanimotoSimilarity(x, y), reverse=True)
+simil_dict['Tanimoto'] = lambda x,y: sorted(tanimoto_dist(x, y), reverse=True)
+simil_dict['Tanimoto_old'] = lambda x,y: sorted(DataStructs.BulkTanimotoSimilarity(x, y), reverse=True)
 simil_dict['Cosine_bit'] = lambda x,y: sorted(DataStructs.BulkCosineSimilarity(x, y), reverse=True)
 simil_dict['Cosine'] = lambda x,y: sorted(cos_dist(x, y), reverse=True)
 simil_dict['Russel'] = lambda x,y: sorted(DataStructs.BulkRusselSimilarity(x,y), reverse=True)

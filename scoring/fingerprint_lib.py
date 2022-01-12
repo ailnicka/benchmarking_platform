@@ -55,7 +55,7 @@ def compress_via_logic(fp, window, op='or'):
     
     len_comp_fp = int(np.ceil(len(fp)/window))
     def operation_on_bits(fp):
-        return [OP_DICT[op](fp[i*window: (i+1)*window]) for i in range(len_comp_fp)]
+        return [int(OP_DICT[op](fp[i*window: (i+1)*window])) for i in range(len_comp_fp)]
     compressed_fp = np.array(operation_on_bits(fp))
 
     return compressed_fp
@@ -82,11 +82,11 @@ class AEFingerprints:
     
     def compressed_MACCS_50_np(self, m):
         m = MACCSkeys.GenMACCSKeys(m)
-        return self.MACCS_50_compressor.encoder(np.array([m])).numpy().flatten()
+        return self.MACCS_50_np_compressor.encoder(np.array([m])).numpy().flatten()
 
     def compressed_Morgan2_100_np(self, m):
         m = AllChem.GetMorganFingerprintAsBitVect(m, 2, nBits=nbits)
-        return self.Morgan_2_compressor.encoder(np.array([m])).numpy().flatten()
+        return self.Morgan_2_np_compressor.encoder(np.array([m])).numpy().flatten()
 
     def compressed_MACCS_Morgan2_100(self, m):
         m1 = MACCSkeys.GenMACCSKeys(m)
